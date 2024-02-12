@@ -1,6 +1,9 @@
 namespace Csharquarium.Interfaces;
 
-public interface IAlgue
+public interface IAlgue : IEntite
 {
-    
+
+
+
+    IAlgue? SeMultiplier();
 }

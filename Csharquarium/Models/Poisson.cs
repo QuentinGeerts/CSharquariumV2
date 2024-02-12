@@ -5,7 +5,7 @@ namespace Csharquarium.Models;
 
 public abstract class Poisson : Entite, IPoisson
 {
-    public Poisson(string nom, Sexe sexe)
+    protected Poisson(string nom, Sexe sexe, int age) : base(age)
     {
         Nom = nom;
         Sexe = sexe;
@@ -16,8 +16,26 @@ public abstract class Poisson : Entite, IPoisson
 
     public override string ToString()
     {
-        return $" 🐟 Poisson {(this is ICarnivore ? "Carnivore" : "Herbivore")} ".PadRight(25) +
-               $"Race: {GetType().Name} {Sexe} ".PadRight(25) +
-               $"Nom: {Nom}";
+        return $" 🐟 Poisson {(this is ICarnivore ? "Carnivore" : "Herbivore")} ".PadRight(30) +
+               $"Race: {GetType().Name} {Sexe} ".PadRight(30) +
+               $"Nom: {Nom} ".PadRight(25) +
+               $"Points de vie: {PointVie} ".PadRight(25) +
+               $"Age: {Age} ".PadRight(25);
     }
+
+    public IPoisson? SeReproduire(IPoisson partenaire)
+    {
+        bool compatible = !EstMort && !partenaire.EstMort
+                                   && GetType() == partenaire.GetType()
+                                   && Sexe != partenaire.Sexe
+                                   && Age > 2 && partenaire.Age > 2;
+
+        Random rnd = new();
+
+        Sexe sexe = (rnd.Next(1) == 0 ? Sexe.Male : Sexe.Femelle);
+        
+        return compatible ? GenererBebe(sexe) : null;
+    }
+
+    protected abstract IPoisson? GenererBebe(Sexe sexe);
 }

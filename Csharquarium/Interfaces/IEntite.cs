@@ -1,6 +1,8 @@
 namespace Csharquarium.Interfaces;
 
-public class IEntite
+public interface IEntite
 {
-    private bool EstMange { get; set; }
+    int PointVie { get; set; }
+    bool EstMort => PointVie <= 0;
+    int Age { get; set; }
 }
