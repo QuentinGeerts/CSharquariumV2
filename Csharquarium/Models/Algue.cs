@@ -10,7 +10,7 @@ public class Algue : Entite, IAlgue
 
     public IAlgue? SeMultiplier()
     {
-        if (Age < 10) return null;
+        if (PointVie < 10) return null;
 
         var bebePv = PointVie / 2;
         PointVie -= bebePv;

@@ -1,4 +1,7 @@
 using Csharquarium.Interfaces;
+using Csharquarium.Models.Carnivores;
+using Csharquarium.Models.Herbivores;
+using Csharquarium.Tools;
 
 namespace Csharquarium.Models;
 
@@ -26,10 +29,7 @@ public class Aquarium
     {
         var rnd = new Random();
 
-        Console.WriteLine();
-        Console.WriteLine($"--------------------------------\n" +
-                          $"| Nombre de tours : {(++_nbTours).ToString(),10} |\n" +
-                          $"--------------------------------\n");
+        Tool.DisplayTitle($"Nombre de tours : {(++_nbTours).ToString(),5} ");
         // Vérifier s'il reste des habitants
         // if (_habitants.Count == 0) return;
 
@@ -98,36 +98,52 @@ public class Aquarium
 
         foreach (var entite in _habitants)
         {
-            if (entite is IPoisson { PointVie: > 5 } p)
+            switch (entite)
             {
-                var poissonsAJour = _habitants.OfType<Poisson>().ToList();
-                var cible = poissonsAJour[rnd.Next(poissonsAJour.Count)];
-                var bebe = p.SeReproduire(cible);
-
-                if (bebe != null)
+                case IPoisson { PointVie: > 5 } p:
                 {
-                    bebePoissons.Add(bebe);
-                    Console.WriteLine($" 🐠 Un bébé {bebe.GetType().Name} est né.");
+                    var poissonsAJour = _habitants.OfType<Poisson>().ToList();
+                    var cible = poissonsAJour[rnd.Next(poissonsAJour.Count)];
+                    var bebe = p.SeReproduire(cible);
+
+                    if (bebe != null)
+                    {
+                        bebePoissons.Add(bebe);
+                    }
+
+                    break;
                 }
-            }
-
-            if (entite is IAlgue { PointVie: >= 10 } a)
-            {
-                var bebe = a.SeMultiplier();
-                if (bebe != null)
+                case IAlgue { PointVie: >= 10 } a:
                 {
-                    bebeAlgues.Add(bebe);
-                    Console.WriteLine($" 🍃 Une petite algue {bebe.GetType().Name} est né.");
+                    var bebe = a.SeMultiplier();
+                    if (bebe != null)
+                    {
+                        bebeAlgues.Add(bebe);
+                    }
+
+                    break;
                 }
             }
         }
 
         // Ajouter les nouveaux nés dans la liste des habitants
-        foreach (var algue in bebeAlgues) AjouterAlgue(algue);
 
-        foreach (var poisson in bebePoissons) AjouterPoisson(poisson);
+        if (bebeAlgues.Count + bebePoissons.Count > 0) Console.WriteLine("\nNaissances:");
+
+        foreach (var algue in bebeAlgues)
+        {
+            AjouterAlgue(algue);
+            Console.WriteLine($" 🍃 Une petite algue {algue.GetType().Name} est né.");
+        }
+
+        foreach (var poisson in bebePoissons)
+        {
+            Console.WriteLine($" 🐠 Un bébé {poisson.GetType().Name} est né.");
+            AjouterPoisson(poisson);
+        }
 
         // Console.ReadLine();
+        Console.WriteLine();
     }
 
     private void Renseigner()
@@ -141,8 +157,17 @@ public class Aquarium
 
         // La liste des poissons avec caractéristiques
         var poissons = _habitants.OfType<Poisson>().ToList();
+
+        var nbBar = poissons.Count(poisson => poisson is Bar);
+        var nbCarpe = poissons.Count(poisson => poisson is Carpe);
+        var nbSole = poissons.Count(poisson => poisson is Sole);
+        var nbMerou = poissons.Count(poisson => poisson is Merou);
+        var nbPoissonClown = poissons.Count(poisson => poisson is PoissonClown);
+        var nbThon = poissons.Count(poisson => poisson is Thon);
+        
         Console.WriteLine($"Caractéristiques de {poissons.Count} poissons :");
-        Console.WriteLine($" - 🥗 Herbivores : {poissons.Count(poisson => poisson is IHerbivore)}");
+        Console.WriteLine($" - 🥗 Herbivores : {poissons.Count(poisson => poisson is IHerbivore)}" +
+                          $"( Bar: {nbBar}  |  Carpe: {nbCarpe}  |  Sole: {nbSole} )");
         Console.WriteLine($" - 🍖 Carnivores : {poissons.Count(poisson => poisson is ICarnivore)}");
 
         Console.WriteLine();
