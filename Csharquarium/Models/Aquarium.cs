@@ -27,16 +27,11 @@ public class Aquarium
 
     public void PasserTemps()
     {
-        var rnd = new Random();
-
         Tool.DisplayTitle($"Nombre de tours : {(++_nbTours).ToString(),5} ");
-        // Vérifier s'il reste des habitants
-        // if (_habitants.Count == 0) return;
-
-
+        
         Renseigner();
 
-        // Console.ReadLine();
+        Console.ReadLine();
 
         // Début de tour
         foreach (var entite in _habitants)
@@ -71,7 +66,7 @@ public class Aquarium
 
                     if (poissonsAJour.Count == 0) continue;
 
-                    var cible = poissonsAJour[rnd.Next(poissonsAJour.Count)];
+                    var cible = poissonsAJour[Tool.Rnd.Next(poissonsAJour.Count)];
                     carnivore.Manger(cible);
                     break;
                 }
@@ -81,7 +76,7 @@ public class Aquarium
 
                     if (alguesAJour.Count == 0) continue;
 
-                    var cible = alguesAJour[rnd.Next(alguesAJour.Count)];
+                    var cible = alguesAJour[Tool.Rnd.Next(alguesAJour.Count)];
                     herbivore.Manger(cible);
                     break;
                 }
@@ -103,7 +98,7 @@ public class Aquarium
                 case IPoisson { PointVie: > 5 } p:
                 {
                     var poissonsAJour = _habitants.OfType<Poisson>().ToList();
-                    var cible = poissonsAJour[rnd.Next(poissonsAJour.Count)];
+                    var cible = poissonsAJour[Tool.Rnd.Next(poissonsAJour.Count)];
                     var bebe = p.SeReproduire(cible);
 
                     if (bebe != null)
@@ -167,8 +162,9 @@ public class Aquarium
         
         Console.WriteLine($"Caractéristiques de {poissons.Count} poissons :");
         Console.WriteLine($" - 🥗 Herbivores : {poissons.Count(poisson => poisson is IHerbivore)}" +
-                          $"( Bar: {nbBar}  |  Carpe: {nbCarpe}  |  Sole: {nbSole} )");
-        Console.WriteLine($" - 🍖 Carnivores : {poissons.Count(poisson => poisson is ICarnivore)}");
+                          $" ( Bar: {nbBar}  |  Carpe: {nbCarpe}  |  Sole: {nbSole} )");
+        Console.WriteLine($" - 🍖 Carnivores : {poissons.Count(poisson => poisson is ICarnivore)}" +
+                          $" ( Merou: {nbMerou}  |  PoissonClown: {nbPoissonClown}  |  Thon: {nbThon} )");
 
         Console.WriteLine();
 

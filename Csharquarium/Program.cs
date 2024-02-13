@@ -12,6 +12,7 @@ Tool.DisplayTitle("CSharquarium");
 
 Tool.DisplayTitle("Création de l'aquarium");
 var aquarium = new Aquarium();
+Console.WriteLine(" 🚧 Création de l'aquarium...");
 
 Tool.DisplayTitle("Création des entités");
 Console.WriteLine(" 🚧 Création des algues...");

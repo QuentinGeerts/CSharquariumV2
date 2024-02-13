@@ -2,6 +2,16 @@ namespace Csharquarium.Tools;
 
 public static class Tool
 {
+    private static Random _rnd = new Random();
+
+    public static Random Rnd
+    {
+        get
+        {
+            return _rnd;
+        }
+    }
+    
     public static void DisplayTitle(string message)
     {
         Console.WriteLine($"┌──────────────── ⋆⋅☆⋅⋆ ────────────────┐");
