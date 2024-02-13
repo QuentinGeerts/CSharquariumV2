@@ -14,6 +14,20 @@ public abstract class Poisson : Entite, IPoisson
     public string Nom { get; set; }
     public Sexe Sexe { get; set; }
 
+    public IPoisson? SeReproduire(IPoisson partenaire)
+    {
+        var compatible = !EstMort && !partenaire.EstMort
+                                  && GetType() == partenaire.GetType()
+                                  && Sexe != partenaire.Sexe
+                                  && Age > 2 && partenaire.Age > 2;
+
+        Random rnd = new();
+
+        var sexe = rnd.Next(1) == 0 ? Sexe.Male : Sexe.Femelle;
+
+        return compatible ? GenererBebe(sexe) : null;
+    }
+
     public override string ToString()
     {
         return $" 🐟 Poisson {(this is ICarnivore ? "Carnivore" : "Herbivore")} ".PadRight(30) +
@@ -21,20 +35,6 @@ public abstract class Poisson : Entite, IPoisson
                $"Nom: {Nom} ".PadRight(25) +
                $"Points de vie: {PointVie} ".PadRight(25) +
                $"Age: {Age} ".PadRight(25);
-    }
-
-    public IPoisson? SeReproduire(IPoisson partenaire)
-    {
-        bool compatible = !EstMort && !partenaire.EstMort
-                                   && GetType() == partenaire.GetType()
-                                   && Sexe != partenaire.Sexe
-                                   && Age > 2 && partenaire.Age > 2;
-
-        Random rnd = new();
-
-        Sexe sexe = (rnd.Next(1) == 0 ? Sexe.Male : Sexe.Femelle);
-        
-        return compatible ? GenererBebe(sexe) : null;
     }
 
     protected abstract IPoisson? GenererBebe(Sexe sexe);

@@ -9,15 +9,12 @@ Console.OutputEncoding = Encoding.UTF8;
 Console.WriteLine("CSharquarium");
 
 Console.WriteLine("\n ➤ Création de l'aquarium");
-Aquarium aquarium = new Aquarium();
+var aquarium = new Aquarium();
 
 Console.WriteLine("\n ➤ Création des entités");
 Console.WriteLine("Création des algues...");
 // Création des algues
-for (int i = 0; i < 5; i++)
-{
-    aquarium.AjouterAlgue(new Algue());
-}
+for (var i = 0; i < 5; i++) aquarium.AjouterAlgue(new Algue());
 
 // Création des poissons
 Console.WriteLine("Création des poissons...");
@@ -40,7 +37,4 @@ Console.WriteLine("\n ➤ Passer le temps");
 //     aquarium.PasserTemps();
 // }
 
-while (aquarium.AlguesCount != 0 || aquarium.PoissonsCount != 0)
-{
-    aquarium.PasserTemps();
-}
+while (aquarium.AlguesCount != 0 || aquarium.PoissonsCount != 0) aquarium.PasserTemps();

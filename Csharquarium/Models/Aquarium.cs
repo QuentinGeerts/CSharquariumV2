@@ -1,4 +1,3 @@
-using Csharquarium.Enums;
 using Csharquarium.Interfaces;
 
 namespace Csharquarium.Models;
@@ -6,7 +5,7 @@ namespace Csharquarium.Models;
 public class Aquarium
 {
     private readonly List<IEntite> _habitants = new(); // Type Inference 
-    private int _nbTours = 0;
+    private int _nbTours;
 
     public int AlguesCount => _habitants.Count(entite => entite is Algue);
     public int PoissonsCount => _habitants.Count(entite => entite is Poisson);
@@ -43,7 +42,7 @@ public class Aquarium
         foreach (var entite in _habitants)
         {
             entite.Age++;
-            
+
             switch (entite)
             {
                 case IPoisson p:
@@ -63,7 +62,7 @@ public class Aquarium
         foreach (var poisson in _habitants.OfType<Poisson>().ToList())
         {
             if (poisson.PointVie > 5) continue;
-            
+
             switch (poisson)
             {
                 case ICarnivore carnivore:
@@ -92,11 +91,11 @@ public class Aquarium
         // Pour effacer éventuellement les morts
         Nettoyer();
 
-        
+
         // Reproduction
         List<IAlgue> bebeAlgues = new();
         List<IPoisson> bebePoissons = new();
-        
+
         foreach (var entite in _habitants)
         {
             if (entite is IPoisson { PointVie: > 5 } p)
@@ -104,14 +103,14 @@ public class Aquarium
                 var poissonsAJour = _habitants.OfType<Poisson>().ToList();
                 var cible = poissonsAJour[rnd.Next(poissonsAJour.Count)];
                 var bebe = p.SeReproduire(cible);
-                
+
                 if (bebe != null)
                 {
                     bebePoissons.Add(bebe);
                     Console.WriteLine($" 🐠 Un bébé {bebe.GetType().Name} est né.");
                 }
             }
-            
+
             if (entite is IAlgue { PointVie: >= 10 } a)
             {
                 var bebe = a.SeMultiplier();
@@ -122,17 +121,11 @@ public class Aquarium
                 }
             }
         }
-        
-        // Ajouter les nouveaux nés dans la liste des habitants
-        foreach (var algue in bebeAlgues)
-        {
-            AjouterAlgue(algue);
-        }
 
-        foreach (var poisson in bebePoissons)
-        {
-            AjouterPoisson(poisson);
-        }
+        // Ajouter les nouveaux nés dans la liste des habitants
+        foreach (var algue in bebeAlgues) AjouterAlgue(algue);
+
+        foreach (var poisson in bebePoissons) AjouterPoisson(poisson);
 
         // Console.ReadLine();
     }
@@ -142,10 +135,7 @@ public class Aquarium
         // Le nombre d'algue
         var algues = _habitants.OfType<Algue>().ToList();
         Console.WriteLine($"Nombre d'algues dans l'aquarium : {algues.Count}");
-        foreach (var algue in algues)
-        {
-            Console.WriteLine(algue);
-        }
+        foreach (var algue in algues) Console.WriteLine(algue);
 
         Console.WriteLine();
 
@@ -157,10 +147,7 @@ public class Aquarium
 
         Console.WriteLine();
 
-        foreach (var poisson in poissons)
-        {
-            Console.WriteLine(poisson);
-        }
+        foreach (var poisson in poissons) Console.WriteLine(poisson);
 
         Console.WriteLine();
     }
@@ -168,18 +155,13 @@ public class Aquarium
     private void Nettoyer()
     {
         // Nettoyage de l'aquarium
-        for (int i = _habitants.Count - 1; i >= 0; i--)
+        for (var i = _habitants.Count - 1; i >= 0; i--)
         {
             if (_habitants[i].Age >= 20)
-            {
                 Console.WriteLine(
                     $"{(_habitants[i] is Poisson ? ((Poisson)_habitants[i]).Nom + " est mort" : _habitants[i].GetType().Name + " est morte")}.");
-            }
 
-            if (_habitants[i].EstMort || _habitants[i].Age >= 20)
-            {
-                _habitants.RemoveAt(i);
-            }
+            if (_habitants[i].EstMort || _habitants[i].Age >= 20) _habitants.RemoveAt(i);
         }
     }
 }

@@ -12,6 +12,4 @@ public abstract class Entite : IEntite
     public int PointVie { get; set; } = 10;
     public bool EstMort => PointVie <= 0;
     public int Age { get; set; }
-    
-    
 }
